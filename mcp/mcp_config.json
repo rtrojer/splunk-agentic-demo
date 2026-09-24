@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "splunk": {
+      "command": "python",
+      "args": ["mcp/splunk-mcp/server.py"],
+      "env": {
+        "SPLUNK_HOST": "https://localhost:8089",
+        "SPLUNK_TOKEN": "Splunk ...",
+        "SPLUNK_VERIFY_SSL": "false"
+      }
+    },
+    "docker": {
+      "command": "docker-mcp-server",
+      "args": []
+    }
+  }
+}
+

@@ -1,0 +1,24 @@
+services:
+  splunk:
+    image: splunk/splunk:latest
+    container_name: splunk-demo
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+    ports:
+      - "8000:8000"
+      - "8089:8089"
+      - "8088:8088"
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:8089/services/server/info"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks:
+      - splunk-net
+
+networks:
+  splunk-net:
+    driver: bridge
+
