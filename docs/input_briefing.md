@@ -1,4 +1,4 @@
-# Kunden-Meeting Notizen: Bankhaus Demo POC
+# Kunden-Meeting Notizen: Splunk Demo POC
 
 Wir hatten heute den Call mit dem CISO-Team. Sie wollen sehen, wie Splunk mit Authentifizierungs-Logs umgeht.
 
