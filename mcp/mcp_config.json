@@ -1,18 +1,14 @@
 {
   "mcpServers": {
-    "splunk": {
-      "command": "python",
-      "args": ["mcp/splunk-mcp/server.py"],
-      "env": {
-        "SPLUNK_HOST": "https://localhost:8089",
-        "SPLUNK_TOKEN": "Splunk ...",
-        "SPLUNK_VERIFY_SSL": "false"
-      }
-    },
-    "docker": {
-      "command": "docker-mcp-server",
-      "args": []
+    "splunk-mcp-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "http://localhost:8000/en-US/splunkd/__raw/services/mcp",
+        "--header",
+        "Authorization: Bearer ${MCP_TOKEN}"
+      ]
     }
   }
 }
-

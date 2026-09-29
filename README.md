@@ -18,6 +18,15 @@ Das Projekt zeigt, wie ein KI-Agent:
 - `docs/` - Enthält das Ausgangs-Briefing (`input_briefing.md`) und die vom Agenten generierte Architekturspezifikation.
 - `runtime/` - Beinhaltet das `docker-compose.yml` und die generierten Testdaten (`sample_events.json`).
 - `mcp/` - Konfiguration für das Model Context Protocol (Splunk MCP).
+- `docs/splunk_mcp_app_setup.md` - REST-API- und Token-Auth-Vorbereitung für die Splunk-MCP-App.
 
 ## Ablauf der Demo
-Um die Demo auszuführen, übergibt man Hermes einfach das Verzeichnis und bittet die KI, die Umgebung basierend auf den Meeting-Notizen (`docs/input_briefing.md`) hochzuziehen. Die Agentic AI übernimmt den Rest – vom Schreiben/Ausführen der Konfigurationsdateien bis zum Ingest und der Validierung der Logs in Splunk.
+Um die Demo unter Windows zu starten, im Projektverzeichnis Folgendes ausführen. Docker Desktop kann bereits laufen; falls nicht, startet das Skript ihn automatisch:
+
+```powershell
+.\runtime\start-splunk.ps1
+```
+
+Das Skript prüft zuerst die Docker Engine. Ist sie nicht verfügbar, startet es Docker Desktop und wartet bis zu fünf Minuten auf die Engine. Erst danach wird `docker compose up -d` mit `runtime/docker-compose.yml` und der Projektdatei `.env` ausgeführt. Für andere Compose-Aktionen können Argumente übergeben werden, zum Beispiel `.\runtime\start-splunk.ps1 ps`.
+
+Anschließend kann Hermes das Verzeichnis übernehmen und die Umgebung basierend auf den Meeting-Notizen (`docs/input_briefing.md`) konfigurieren, Testdaten einspielen und die Logs in Splunk validieren.

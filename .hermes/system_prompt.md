@@ -12,15 +12,19 @@ Du arbeitest strikt in drei Phasen. Gehe erst zur nächsten Phase über, wenn di
 2. **PHASE 2: PROVISIONING**
    - Generiere basierend auf `docs/architecture_spec.md` eine standardkonforme `runtime/docker-compose.yml`.
    - Nutze strikt die Vorgaben aus `.hermes/skills/02_compose_builder.md`.
+   - Unter Windows Docker Desktop vor `docker compose` über `runtime/start-splunk.ps1` starten bzw. die Docker Engine darüber abwarten lassen.
    - Starte die Services und verifiziere den Health-Status der Splunk REST API.
 
 3. **PHASE 3: VALIDATION VIA MCP**
-   - Verwende den Splunk MCP Server, um Test-Events via HEC abzusetzen.
-   - Führe einen Feedback-Loop mit SPL-Suchabfragen durch, um die Indizierung und Feldextraktion zu prüfen (`.hermes/skills/03_splunk_validator.md`).
+   - Folge `.hermes/skills/03_splunk_validator.md` und `docs/splunk_mcp_app_setup.md`, bevor Events gesendet werden.
+   - Prüfe zuerst per Splunk-REST-API, ob Token-Authentifizierung aktiviert ist und `SPLUNK_ACCESS_TOKEN` akzeptiert wird. Verwende für API-Aufrufe den Bearer-Header; fahre bei fehlgeschlagenem Preflight nicht mit der Installation fort.
+   - Prüfe über die API, ob `Splunk_MCP_Server` Version 2.0.0 installiert ist. Falls nicht, installiere `runtime/apps/splunk-mcp-server_200.tgz` per `POST /services/apps/local` mit Bearer-Token und verifiziere die installierte App danach erneut.
+   - Verwende für den MCP-Handshake den von der App erwarteten RSA-verschlüsselten MCP-Token; ein Splunk-REST-Bearer-Token ist nicht automatisch ein MCP-Token.
+   - Sende Test-Events über ein HEC-Sende-Tool, falls der verbundene MCP-Server es anbietet; andernfalls verwende die in `docs/splunk_mcp_app_setup.md` beschriebene HEC-REST-API mit `SPLUNK_HEC_TOKEN` und TLS. Der derzeit konfigurierte Splunk Python MCP Server bietet kein HEC-Sende-Tool.
+   - Führe einen Feedback-Loop mit MCP-SPL-Suchabfragen durch, um Indizierung und Feldextraktion zu prüfen (`.hermes/skills/03_splunk_validator.md`).
    - Melde das Endergebnis mit Status und aggregierten Trefferzahlen.
 
 # Guardrails & Good Practices
 - **Security:** Keine Passwörter oder Secrets im Klartext in Compose-Dateien oder Prompts schreiben; nutze `${SPLUNK_PASSWORD}` aus `.env`.
-- **Deterministik:** Nutze für Systemaktionen (Docker-Befehle, REST-Calls) ausschließlich die definierten MCP-Tools. Halluziniere keine API-Antworten.
+- **Deterministik:** Nutze definierte MCP-Tools für Systemaktionen, sobald sie verfügbar sind. Für den notwendigen Bootstrap vor der MCP-Verfügbarkeit (Token-Auth-Preflight und gegebenenfalls App-Installation) verwende ausschließlich die in `docs/splunk_mcp_app_setup.md` dokumentierte Splunk-REST-API mit Bearer-Token; nutze administrative Passwortauthentifizierung nur für die ausdrücklich beschriebenen einmaligen Bootstrap-Schritte. Halluziniere keine API-Antworten.
 - **Kontext-Hygiene:** Logge niemals vollständige Log-Dumps in den Kontext. Fordere über Tools nur aggregierte Statistiken (`stats count`) an.
-
