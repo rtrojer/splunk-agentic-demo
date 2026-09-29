@@ -14,7 +14,7 @@ Die Splunk-MCP-Server-App installieren und konfigurieren, damit sie für die POC
 - Die App-Dateien wurden in das persistente App-Verzeichnis des Splunk-Containers kopiert; Splunk registriert `Splunk_MCP_Server` Version 2.0.0. Die vorhandene Laufzeitinstallation wurde per Container-Dateikopie eingerichtet, nicht per REST-Upload.
 - Die App wurde neu gestartet. Ihr REST-Endpunkt unter `https://localhost:8089/servicesNS/nobody/Splunk_MCP_Server/mcp` ist registriert/erreichbar, aber der MCP-Handshake wurde noch nicht erfolgreich abgeschlossen.
 - Das App-Verzeichnis `local` im Container wurde angelegt und dem Splunk-Prozess zugeordnet, damit die App ihre Laufzeitkonfiguration lesen kann.
-- Unter Windows startet `runtime/start-splunk.ps1` Docker Desktop bei Bedarf, wartet auf die Docker Engine und ruft erst dann Compose auf. PowerShell-Syntax und Compose-Konfiguration wurden geprüft.
+- Unter Windows startet `runtime/start-docker-desktop.ps1` Docker Desktop bei Bedarf und wartet auf die Docker Engine. Das Skript führt Compose nicht aus; der Stack wird separat mit `docker compose --env-file .env -f runtime\docker-compose.yml up -d` gestartet.
 - Python 3.14.7 ist auf Windows installiert und über `python`, `python3` sowie `py` erreichbar.
 - Die Voraussetzungen für Phase 3 sind jetzt in `docs/splunk_mcp_app_setup.md` beschrieben: REST-Token-Preflight, API-Installation der App nur bei HTTP 404, Installationsprüfung und notwendiger RSA-verschlüsselter MCP-Token.
 - REST-Preflight war erfolgreich: Token-Authentifizierung ist aktiviert, `SPLUNK_ACCESS_TOKEN` wird akzeptiert und `Splunk_MCP_Server` Version 2.0.0 ist installiert.
@@ -51,4 +51,4 @@ Der Nutzer hat klargestellt, dass `.env` hier lediglich unproblematische Beispie
 2. Eine reproduzierbare, unterstützte MCP-Client-Lösung festlegen: native App (Secure-Storage-Fehler beheben und RSA-MCP-Token ausstellen) oder den externen Python-MCP-Server in einem eigenen, getesteten Fork/Wrapper korrigieren und `mcp/mcp_config.json` entsprechend konfigurieren.
 3. Für die externe MCP-Implementierung HEC-REST als Ingest-Fallback dokumentiert lassen, solange kein HEC-Sende-Tool bereitsteht.
 4. Optional `.env` in `.env.example` umbenennen, falls die Datei ausdrücklich als Vorlage gekennzeichnet werden soll.
-5. Unter Windows `runtime/start-splunk.ps1` zum Starten bzw. für Compose-Aktionen nutzen, damit Docker Desktop bei Bedarf zuerst gestartet wird.
+5. Unter Windows bei Bedarf `runtime/start-docker-desktop.ps1` zum Starten von Docker Desktop und Warten auf die Engine verwenden; Compose anschließend separat ausführen.

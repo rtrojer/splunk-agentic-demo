@@ -21,12 +21,26 @@ Das Projekt zeigt, wie ein KI-Agent:
 - `docs/splunk_mcp_app_setup.md` - REST-API- und Token-Auth-Vorbereitung für die Splunk-MCP-App.
 
 ## Ablauf der Demo
-Um die Demo unter Windows zu starten, im Projektverzeichnis Folgendes ausführen. Docker Desktop kann bereits laufen; falls nicht, startet das Skript ihn automatisch:
+Um die Demo unter Windows zu starten, zunächst Docker Desktop und die Engine bereitstellen:
 
 ```powershell
-.\runtime\start-splunk.ps1
+.\runtime\start-docker-desktop.ps1
 ```
 
-Das Skript prüft zuerst die Docker Engine. Ist sie nicht verfügbar, startet es Docker Desktop und wartet bis zu fünf Minuten auf die Engine. Erst danach wird `docker compose up -d` mit `runtime/docker-compose.yml` und der Projektdatei `.env` ausgeführt. Für andere Compose-Aktionen können Argumente übergeben werden, zum Beispiel `.\runtime\start-splunk.ps1 ps`.
+Das Skript startet Docker Desktop bei Bedarf und wartet bis zu fünf Minuten auf eine erreichbare Docker Engine. Es führt **keine** Docker-Compose-Befehle aus. Starte anschließend den Demo-Stack separat:
+
+```powershell
+docker compose --env-file .env -f runtime\docker-compose.yml up -d
+```
 
 Anschließend kann Hermes das Verzeichnis übernehmen und die Umgebung basierend auf den Meeting-Notizen (`docs/input_briefing.md`) konfigurieren, Testdaten einspielen und die Logs in Splunk validieren.
+
+## Phase 4: Demo bereinigen
+
+Wenn die Demo nicht mehr benötigt wird, entfernt Phase 4 ihre Docker-Compose-Ressourcen und rebased den aktuellen Git-Branch auf seinen konfigurierten Upstream:
+
+```powershell
+.\runtime\purge-demo.ps1
+```
+
+Das Skript verlangt eine Bestätigung, prüft vor dem Rebase auf einen sauberen Git-Stand und bricht bei gemeinsam genutzten oder unerwarteten Compose-Ressourcen ab. Es entfernt keine globalen Docker-Ressourcen, behält das Splunk-Image und die Host-Dateien bei. Splunk-Daten im entfernten Container gehen verloren. Details und Schutzprüfungen stehen in `.hermes/skills/04_purge.md`.
