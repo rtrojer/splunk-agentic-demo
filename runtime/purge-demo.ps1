@@ -67,7 +67,7 @@ try {
         if ($configFiles -notcontains $expectedComposeFile) {
             throw "Compose project '$composeProject' also contains container '$($container.Name)' from another configuration; refusing to remove shared project resources."
         }
-        $demoContainerIds += $containerId
+        $demoContainerIds += $container.Id
     }
 
     $networkIds = @(& $dockerPath network ls -q --filter "label=com.docker.compose.project=$composeProject")
