@@ -5,9 +5,9 @@
       "args": [
         "-y",
         "mcp-remote",
-        "http://localhost:8000/en-US/splunkd/__raw/services/mcp",
+        "https://localhost:8089/servicesNS/nobody/Splunk_MCP_Server/mcp",
         "--header",
-        "Authorization: Bearer ${MCP_TOKEN}"
+        "Authorization: Bearer ${SPLUNK_MCP_TOKEN}"
       ]
     }
   }
