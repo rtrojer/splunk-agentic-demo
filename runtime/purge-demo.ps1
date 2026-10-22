@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $composeFile = Join-Path $PSScriptRoot 'docker-compose.yml'
-$composeProject = Split-Path -Leaf $PSScriptRoot
+$composeProject = "runtime"
 $gitCommand = Get-Command git -CommandType Application -ErrorAction Stop |
     Select-Object -First 1
 $dockerCommand = Get-Command docker -CommandType Application -ErrorAction Stop |

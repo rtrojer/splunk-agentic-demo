@@ -3,7 +3,7 @@ set -e
 
 PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 COMPOSE_FILE="$PROJECT_ROOT/runtime/docker-compose.yml"
-COMPOSE_PROJECT=$(basename "$PROJECT_ROOT")
+COMPOSE_PROJECT="runtime"
 
 if [ ! -f "$COMPOSE_FILE" ]; then
     echo "Docker Compose file not found: $COMPOSE_FILE" >&2
